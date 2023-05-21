@@ -20,7 +20,19 @@ struct HomeStore: ReducerProtocol {
             .init(id: .init()),
             .init(id: .init()),
             .init(id: .init()),
-            .init(id: .init())
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
+            .init(id: .init()),
         ]
         
         var editPlot: EditPlotStore.State?

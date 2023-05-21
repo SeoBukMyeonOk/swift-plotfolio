@@ -15,20 +15,32 @@ struct HomeView: View {
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             NavigationStack(path: viewStore.binding(\.$path)) {
-                VStack {
+                VStack(spacing: .zero) {
                     List {
                         ForEachStore(self.store.scope(state: \.plotListCells, action: HomeStore.Action.plotListCell(id:action:))) {
                             PlotListCellView(store: $0)
                         }
+                    }
+                    
+                    Spacer()
+                    
+                    HStack {
+                        Spacer()
+                        
+                        Button(action:{
+                            viewStore.send(.addButtonTapped)
+                        }) {
+                            Image(systemName: "square.and.pencil")
+                                .imageScale(.large)
+                                .foregroundColor(.accentColor)
+                        }
+                        .padding(.horizontal)
                     }
                 }
                 .navigationTitle("Plotfolio")
                 .navigationBarItems(
                     trailing: HStack(spacing: 20) {
                         EditButton()
-                        Button("Add") {
-                            viewStore.send(.addButtonTapped)
-                        }
                     }
                 )
                 .navigationDestination(for: HomeScene.self) { scene in
