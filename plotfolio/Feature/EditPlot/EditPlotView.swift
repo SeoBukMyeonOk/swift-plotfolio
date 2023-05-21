@@ -19,15 +19,14 @@ struct EditPlotView: View {
             VStack(spacing: .zero) {
                 HStack(alignment: .firstTextBaseline) {
                     VStack(alignment: .leading, spacing: 10) {
-                        Button("Date") {
+                        TextField("Title", text: $name)
+                        
+                        Button("23.04.21") {
                             
                         }
                         .foregroundColor(.black)
                         .font(.subheadline)
                         .fontWeight(.semibold)
-                        
-                        TextField("Title", text: $name)
-                            .padding(.bottom)
                         
                         HStack(spacing: .zero) {
                             Image(systemName: "star")
