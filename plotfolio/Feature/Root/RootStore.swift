@@ -36,5 +36,9 @@ struct RootStore: ReducerProtocol {
                 return .none
             }
         }
+        
+        Scope(state: \.home, action: /Action.home) {
+            HomeStore()
+        }
     }
 }

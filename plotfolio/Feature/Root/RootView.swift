@@ -14,10 +14,7 @@ struct RootView: View {
     
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            NavigationStack(path: viewStore.binding(\.$path)) {
-                HomeView(store: self.store.scope(state: \.home, action: RootStore.Action.home))
-                    .navigationTitle("Plotfolio")
-            }
+            HomeView(store: self.store.scope(state: \.home, action: RootStore.Action.home))
         }
     }
 }
