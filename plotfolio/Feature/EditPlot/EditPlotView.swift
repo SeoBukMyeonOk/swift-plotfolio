@@ -12,9 +12,9 @@ import ComposableArchitecture
 struct EditPlotView: View {
     public let store: StoreOf<EditPlotStore>
     
+    @Environment(\.colorScheme) var colorScheme
     @State private var calendarId: UUID = UUID()
     var rating: CGFloat = 2.3
-    var maxRating: Int = 5
     
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -25,6 +25,8 @@ struct EditPlotView: View {
                             get: { $0.plot.title ?? "" },
                             send: { .titleChanged($0) }
                         ))
+                        .font(.title3)
+                        .fontWeight(.semibold)
                         
                         DatePicker(
                             "",
@@ -37,26 +39,39 @@ struct EditPlotView: View {
                         })
                         .frame(width: 40)
                         .padding(.horizontal)
+                        .padding(.bottom, 50)
                         
                         let stars = HStack(spacing: 0) {
-                            ForEach(0..<maxRating, id: \.self) { _ in
+                            ForEach(0..<5, id: \.self) { _ in
                                 Image(systemName: "star.fill")
                                     .resizable()
                                     .aspectRatio(contentMode: .fit)
                             }
                         }
-
+                            .contentShape(Rectangle())
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { val in
+                                        var scaledX = val.location.x
+                                        scaledX = scaledX < 0 ? 0.0 : scaledX
+                                        scaledX = scaledX > 100 ? 100.0 : scaledX
+                                        let point = round(scaledX / 100.0 * 5 * 10) / 10
+                                        
+                                        viewStore.send(.pointChanged(point))
+                                    }
+                            )
+                            .frame(width: 100)
+                        
                         stars.overlay(
                             GeometryReader { g in
-                                let width = rating / CGFloat(maxRating) * g.size.width
+                                let width = viewStore.state.point / CGFloat(5) * g.size.width
                                 ZStack(alignment: .leading) {
                                     Rectangle()
                                         .frame(width: width)
                                         .foregroundColor(.yellow)
                                 }
-                                let _ = print(g)
                             }
-                            .mask(stars)
+                                .mask(stars)
                         )
                         .foregroundColor(.gray)
                     }
@@ -74,7 +89,7 @@ struct EditPlotView: View {
                                         Image(systemName: viewStore.state.type == type.int16 ? "circle.fill" : "circle")
                                             .imageScale(.small)
                                             .font(.footnote)
-                                            .foregroundColor(.gray)
+                                            .foregroundColor(colorScheme == .light ? .black : .white)
                                     })
                                 
                                 Text("\(type.rawValue)")
@@ -100,13 +115,6 @@ struct EditPlotView: View {
                     .lineSpacing(5)
                 }
             }
-            .navigationBarItems(
-                trailing: HStack(spacing: 20) {
-                    Button("Save") {
-                        viewStore.send(.saveButtonTapped)
-                    }
-                }
-            )
             .navigationBarTitleDisplayMode(.inline)
         }
     }

@@ -68,19 +68,12 @@ struct HomeStore: ReducerProtocol {
                     return .none
                 }
                 
-            case let .editPlot(action):
-                switch action {
-                case .saveButtonTapped:
-                    state.path.removeLast()
-                    return .none
-                    
-                default:
-                    return .none
-                }
+            case .editPlot:
+                return .none
             }
         }
         .forEach(\.plotListCells, action: /Action.plotListCell(id:action:)) {
-          PlotListCellStore()
+            PlotListCellStore()
         }
         .ifLet(\.editPlot, action: /Action.editPlot) {
             EditPlotStore()

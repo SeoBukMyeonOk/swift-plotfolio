@@ -13,11 +13,13 @@ struct EditPlotStore: ReducerProtocol {
     struct State: Equatable {
         var plot: Plot
         
+        var point: Double = 0.0
         var date: Date = .init()
         var type: Int16
         
         init(plot: Plot) {
             self.plot = plot
+            self.point = plot.point
             self.type = plot.type
         }
     }
@@ -29,9 +31,9 @@ struct EditPlotStore: ReducerProtocol {
         case contentChanged(String)
         case dateChanged(Date)
         case typeChanged(Int16)
-        case saveButtonTapped
+        case pointChanged(Double)
         
-        case saveResponse(TaskResult<Plot>)
+        case saveRequest
         
         case plotListCell(id: PlotListCellStore.State.ID, action: PlotListCellStore.Action)
     }
@@ -48,29 +50,31 @@ struct EditPlotStore: ReducerProtocol {
                 
             case let .titleChanged(title):
                 state.plot.title = title
-                return .none
+                return .send(.saveRequest)
                 
             case let .contentChanged(content):
                 state.plot.content = content
-                return .none
+                return .send(.saveRequest)
                 
             case let .dateChanged(date):
                 state.plot.date = date
-                return .none
+                return .send(.saveRequest)
                 
             case let .typeChanged(type):
                 state.plot.type = type
                 state.type = type
-                return .none
+                return .send(.saveRequest)
                 
-            case .saveButtonTapped:
+            case let .pointChanged(point):
+                state.plot.point = point
+                state.point = point
+                return .send(.saveRequest)
+                
+            case .saveRequest:
                 plotClient.save()
                 return .none
                 
             case .plotListCell:
-                return .none
-                
-            case .saveResponse(_):
                 return .none
             }
         }

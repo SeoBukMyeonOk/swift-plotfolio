@@ -57,6 +57,8 @@ class PlotCloudManager {
 extension PlotCloudManager {
     var newPlot: Plot {
         let viewContext = self.persistentContainer.viewContext
+        viewContext.reset()
+        
         let newPlot = Plot(context: viewContext)
         
         newPlot.title = ""
@@ -68,6 +70,8 @@ extension PlotCloudManager {
     
     func fetch() -> [Plot] {
         let viewContext = self.persistentContainer.viewContext
+        viewContext.reset()
+        
         let request: NSFetchRequest<NSFetchRequestResult> = .init(entityName: "Plot")
         
         do {
