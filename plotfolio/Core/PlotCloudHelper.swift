@@ -8,6 +8,7 @@
 import Foundation
 
 import CloudKit
+import CoreData
 
 enum FetchError {
     case addingError
@@ -17,26 +18,63 @@ enum FetchError {
     case none
 }
 
-struct PlotCloudHelper {
-    private let recordType = "Plot"
-    private let containerName = "iCloud.plotfolio"
+class PlotCloudHelper {
+    static let shared = PlotCloudHelper()
+    
+    lazy var persistentContainer: NSPersistentCloudKitContainer = {
+        let container = NSPersistentCloudKitContainer(name: "plotfolio")
+        let storeDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).last!
+        
+        let localUrl = storeDirectory.appendingPathComponent("Local.sqlite")
+        let localStoreDescription =
+        NSPersistentStoreDescription(url: localUrl)
+        localStoreDescription.configuration = "Local"
+        
+        let cloudUrl = storeDirectory.appendingPathComponent("Cloud.sqlite")
+        let cloudStoreDescription =
+        NSPersistentStoreDescription(url: cloudUrl)
+        cloudStoreDescription.configuration = "Cloud"
+        
+        cloudStoreDescription.cloudKitContainerOptions =
+        NSPersistentCloudKitContainerOptions(
+            containerIdentifier: "iCloud.plotfolio")
+        
+        container.persistentStoreDescriptions = [
+            cloudStoreDescription,
+            localStoreDescription
+        ]
+        
+        container.loadPersistentStores { storeDescription, error in
+            guard error == nil else {
+                fatalError("Could not load persistent stores. \(error!)")
+            }
+        }
+        
+        return container
+    }()
+}
+
+extension PlotCloudHelper {
+    func save(_ plot: Plot) {
+        let viewContext = self.persistentContainer.viewContext
+        
+        let newPlot = Plot(context: viewContext)
+        newPlot.date = plot.date
+        newPlot.title = plot.title
+        newPlot.content = plot.content
+        newPlot.type = plot.type
+        newPlot.point = plot.point
+        
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
     
     func fetchTasks(completion: @escaping ([CKRecord]?, FetchError) -> Void) {
-        let publicDatabase = CKContainer(identifier: containerName).publicCloudDatabase
-        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
-        query.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
-        
-        publicDatabase.fetch(
-            withQuery: query,
-            inZoneWith: CKRecordZone.default().zoneID,
-            completionHandler: { (records, error) -> Void in
-                self.processQueryResponseWith(
-                    records: records,
-                    error: error as NSError?,
-                    completion: { fetchedRecords, fetchError in
-                        completion(fetchedRecords, fetchError)
-                    })
-            })
+        try? print(persistentContainer.viewContext.fetch(.init(entityName: "Plot")))
     }
     
     func addTask(_ task: String, completionHandler: @escaping (CKRecord?, FetchError) -> Void) {
@@ -51,22 +89,33 @@ struct PlotCloudHelper {
         
     }
     
-    private func processQueryResponseWith(
-        records: [CKRecord]?,
-        error: NSError?,
-        completion: @escaping ([CKRecord]?, FetchError)
-        -> Void
-    ) {
-        guard error == nil else {
-            completion(nil, .fetchingError)
-            return
-        }
-        
-        guard let records = records, records.count > 0 else {
-            completion(nil, .noRecords)
-            return
-        }
-        
-        completion(records, .none)
-    }
+    
+    
+    //        func fetchTasks(completion: @escaping ([CKRecord]?, FetchError) -> Void) {
+    //    //        let publicDatabase = CKContainer(identifier: containerName).publicCloudDatabase
+    //    //        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
+    //    //        query.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
+    //
+    //
+    //            try? print(persistentContainer.viewContext.fetch(.init(entityName: "Plot")))
+    //        }
+    //
+    //        func add() {
+    //    //        let publicDatabase = CKContainer(identifier: containerName).publicCloudDatabase
+    //            let record = CKRecord(recordType: "Plot")
+    //
+    //            record.setObject("test title" as __CKRecordObjCValue, forKey: "title")
+    //            record.setObject(Date() as __CKRecordObjCValue, forKey: "date")
+    //
+    //            persistentContainer.
+    //
+    //            publicDatabase.save(record, completionHandler: { (record, error) in
+    //              guard let _ = error else {
+    //                completionHandler(record, .none)
+    //                return
+    //              }
+    //
+    //              completionHandler(nil, .addingError)
+    //            })
+    //        }
 }

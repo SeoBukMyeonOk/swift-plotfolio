@@ -12,14 +12,16 @@ import ComposableArchitecture
 struct EditPlotView: View {
     public let store: StoreOf<EditPlotStore>
     @State private var text: String = ""
-    @State var name: String = ""
     
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             VStack(spacing: .zero) {
                 HStack(alignment: .firstTextBaseline) {
                     VStack(alignment: .leading, spacing: 10) {
-                        TextField("Title", text: $name)
+                        TextField("Title", text: viewStore.binding(
+                            get: { $0.plot.title ?? "" },
+                            send: { .titleChanged($0) }
+                        ))
                         
                         Button("23.04.21") {
                             
@@ -63,12 +65,24 @@ struct EditPlotView: View {
                     .padding(.horizontal)
                 
                 VStack {
-                    TextEditor(text: $text)
-                        .padding()
-                        .foregroundColor(.black)
-                        .lineSpacing(5)
+                    TextEditor(
+                        text: viewStore.binding(
+                            get: { $0.plot.content ?? "" },
+                            send: { .contentChanged($0) }
+                        )
+                    )
+                    .padding()
+                    .foregroundColor(.black)
+                    .lineSpacing(5)
                 }
             }
+            .navigationBarItems(
+                trailing: HStack(spacing: 20) {
+                    Button("Save") {
+                        
+                    }
+                }
+            )
             .navigationBarTitleDisplayMode(.inline)
         }
     }

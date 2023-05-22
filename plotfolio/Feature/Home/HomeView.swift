@@ -37,6 +37,9 @@ struct HomeView: View {
                         .padding(.horizontal)
                     }
                 }
+                .onAppear {
+                    viewStore.send(.refresh)
+                }
                 .navigationTitle("Plotfolio")
                 .navigationBarItems(
                     trailing: HStack(spacing: 20) {

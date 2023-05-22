@@ -17,22 +17,7 @@ struct HomeStore: ReducerProtocol {
         @BindingState var path: [HomeScene] = []
         
         var plotListCells: IdentifiedArrayOf<PlotListCellStore.State> = [
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
+            .init(id: .init())
         ]
         
         var editPlot: EditPlotStore.State?
@@ -41,11 +26,15 @@ struct HomeStore: ReducerProtocol {
     enum Action: BindableAction, Equatable {
         case binding(BindingAction<State>)
         
+        case refresh
         case addButtonTapped
+        case fetchResponse(TaskResult<[Plot]>)
         
         case plotListCell(id: PlotListCellStore.State.ID, action: PlotListCellStore.Action)
         case editPlot(EditPlotStore.Action)
     }
+    
+    @Dependency(\.plotClient) var plotClient
     
     var body: some ReducerProtocol<State, Action> {
         BindingReducer()
@@ -55,9 +44,20 @@ struct HomeStore: ReducerProtocol {
             case .binding:
                 return .none
                 
+            case .refresh:
+                return .task {
+                    await .fetchResponse(
+                        TaskResult { try await self.plotClient.fetch() }
+                    )
+                }
+                
             case .addButtonTapped:
                 state.editPlot = .init()
                 state.path.append(.editPlot)
+                return .none
+                
+            case let .fetchResponse(plots):
+                print(plots)
                 return .none
                 
             case .plotListCell:
