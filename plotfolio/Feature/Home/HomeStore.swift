@@ -28,6 +28,7 @@ struct HomeStore: ReducerProtocol {
         case refresh
         case addButtonTapped
         case fetchResponse([Plot])
+        case delete(IndexSet)
         
         case plotListCell(id: PlotListCellStore.State.ID, action: PlotListCellStore.Action)
         case editPlot(EditPlotStore.Action)
@@ -57,6 +58,13 @@ struct HomeStore: ReducerProtocol {
                     state.plotListCells.append(.init(id: .init(), plot: plot))
                 })
                 return .none
+                
+            case let .delete(indexSet):
+                for index in indexSet {
+                    let id = state.plotListCells[index].plot.objectID
+                    plotClient.delete(id)
+                }
+                return .send(.refresh)
                 
             case let .plotListCell(id, action):
                 switch action {

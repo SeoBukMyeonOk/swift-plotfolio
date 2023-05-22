@@ -8,24 +8,28 @@
 import Foundation
 
 import ComposableArchitecture
+import CoreData
 
 public struct PlotClient {
     var newPlot: Plot
     var fetch: () -> [Plot]
     var save: () -> ()
+    var delete: (NSManagedObjectID) -> ()
 }
 
 extension PlotClient: TestDependencyKey {
     public static let previewValue = Self(
         newPlot: PlotCloudManager.shared.newPlot,
         fetch: { [] },
-        save: { }
+        save: { },
+        delete: { _ in }
     )
     
     public static let testValue = Self(
         newPlot: unimplemented("\(Self.self).newPlot"),
         fetch: unimplemented("\(Self.self).fetch"),
-        save: unimplemented("\(Self.self).save")
+        save: unimplemented("\(Self.self).save"),
+        delete: unimplemented("\(Self.self).delete")
     )
 }
 
@@ -41,6 +45,7 @@ extension PlotClient: DependencyKey {
     static public let liveValue = PlotClient(
         newPlot: PlotCloudManager.shared.newPlot,
         fetch: { PlotCloudManager.shared.fetch() },
-        save: { PlotCloudManager.shared.save() }
+        save: { PlotCloudManager.shared.save() },
+        delete: { id in PlotCloudManager.shared.delete(id: id) }
     )
 }

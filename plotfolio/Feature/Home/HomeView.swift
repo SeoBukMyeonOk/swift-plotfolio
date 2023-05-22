@@ -20,6 +20,7 @@ struct HomeView: View {
                         ForEachStore(self.store.scope(state: \.plotListCells, action: HomeStore.Action.plotListCell(id:action:))) { store in
                             PlotListCellView(store: store)
                         }
+                        .onDelete { viewStore.send(.delete($0)) }
                     }
                     
                     Spacer()

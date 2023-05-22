@@ -82,6 +82,17 @@ extension PlotCloudManager {
         }
     }
     
+    func fetch(id: NSManagedObjectID) -> Plot? {
+        let viewContext = self.persistentContainer.viewContext
+        
+        do {
+            return try viewContext.existingObject(with: id) as? Plot
+        } catch {
+            print(error)
+            return nil
+        }
+    }
+    
     func save() {
         let viewContext = self.persistentContainer.viewContext
 
@@ -89,6 +100,15 @@ extension PlotCloudManager {
             try viewContext.save()
         } catch {
             print(error)
+        }
+    }
+    
+    func delete(id: NSManagedObjectID) {
+        let viewContext = self.persistentContainer.viewContext
+        
+        if let plot = self.fetch(id: id) {
+            viewContext.delete(plot)
+            self.save()
         }
     }
 }
