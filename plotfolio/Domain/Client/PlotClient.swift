@@ -44,4 +44,3 @@ extension PlotClient: DependencyKey {
         save: { PlotCloudManager.shared.save() }
     )
 }
-

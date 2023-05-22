@@ -16,9 +16,7 @@ struct HomeStore: ReducerProtocol {
     struct State: Equatable {
         @BindingState var path: [HomeScene] = []
         
-        var plotListCells: IdentifiedArrayOf<PlotListCellStore.State> = [
-            .init(id: .init())
-        ]
+        var plotListCells: IdentifiedArrayOf<PlotListCellStore.State> = []
         
         var editPlot: EditPlotStore.State?
     }
@@ -55,7 +53,7 @@ struct HomeStore: ReducerProtocol {
             case let .fetchResponse(plots):
                 state.plotListCells = []
                 plots.forEach({ plot in
-                    state.plotListCells.append(.init(id: .init()))
+                    state.plotListCells.append(.init(id: .init(), plot: plot))
                 })
                 return .none
                 

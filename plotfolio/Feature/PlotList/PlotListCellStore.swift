@@ -12,24 +12,14 @@ import ComposableArchitecture
 struct PlotListCellStore: ReducerProtocol {
     struct State: Equatable, Identifiable {
         let id: UUID
-        var description = ""
-        var isComplete = false
+        let plot: Plot
     }
     
     enum Action: Equatable {
-        case checkBoxToggled
-        case textFieldChanged(String)
     }
     
     func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
-        case .checkBoxToggled:
-            state.isComplete.toggle()
-            return .none
-            
-        case let .textFieldChanged(description):
-            state.description = description
-            return .none
         }
     }
 }

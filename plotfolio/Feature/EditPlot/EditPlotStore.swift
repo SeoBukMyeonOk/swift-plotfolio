@@ -11,12 +11,6 @@ import ComposableArchitecture
 
 struct EditPlotStore: ReducerProtocol {
     struct State: Equatable {
-        var plotListCells: IdentifiedArrayOf<PlotListCellStore.State> = [
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init()),
-            .init(id: .init())
-        ]
         var plot: Plot
     }
     
@@ -70,9 +64,6 @@ struct EditPlotStore: ReducerProtocol {
             case .saveResponse(_):
                 return .none
             }
-        }
-        .forEach(\.plotListCells, action: /Action.plotListCell(id:action:)) {
-            PlotListCellStore()
         }
     }
 }

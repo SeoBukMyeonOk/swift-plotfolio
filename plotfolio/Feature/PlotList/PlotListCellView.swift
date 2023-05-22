@@ -14,18 +14,23 @@ struct PlotListCellView: View {
     
     var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
-            HStack {
-                Button(action: { viewStore.send(.checkBoxToggled) }) {
-                    Image(systemName: viewStore.isComplete ? "checkmark.square" : "square")
+            VStack {
+                HStack {
+                    Text(viewStore.plot.title ?? "")
+                        .font(.title3)
+                        .fontWeight(.semibold)
+                    
+                    Spacer()
                 }
-                .buttonStyle(.plain)
                 
-                TextField(
-                    "Untitled Todo",
-                    text: viewStore.binding(get: \.description, send: PlotListCellStore.Action.textFieldChanged)
-                )
+                HStack {
+                    Text(viewStore.plot.content ?? "")
+                        .font(.title)
+                        .foregroundColor(.gray)
+                    
+                    Spacer()
+                }
             }
-            .foregroundColor(viewStore.isComplete ? .gray : nil)
         }
     }
 }
