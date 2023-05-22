@@ -28,7 +28,7 @@ struct HomeStore: ReducerProtocol {
         
         case refresh
         case addButtonTapped
-        case fetchResponse(TaskResult<[Plot]>)
+        case fetchResponse([Plot])
         
         case plotListCell(id: PlotListCellStore.State.ID, action: PlotListCellStore.Action)
         case editPlot(EditPlotStore.Action)
@@ -45,11 +45,7 @@ struct HomeStore: ReducerProtocol {
                 return .none
                 
             case .refresh:
-                return .task {
-                    await .fetchResponse(
-                        TaskResult { try await self.plotClient.fetch() }
-                    )
-                }
+                return .send(.fetchResponse(plotClient.fetch()))
                 
             case .addButtonTapped:
                 state.editPlot = .init(.init(plot: plotClient.newPlot))
@@ -57,7 +53,10 @@ struct HomeStore: ReducerProtocol {
                 return .none
                 
             case let .fetchResponse(plots):
-                print(plots)
+                state.plotListCells = []
+                plots.forEach({ plot in
+                    state.plotListCells.append(.init(id: .init()))
+                })
                 return .none
                 
             case .plotListCell:

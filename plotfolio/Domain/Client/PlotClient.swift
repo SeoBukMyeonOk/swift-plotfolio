@@ -11,15 +11,15 @@ import ComposableArchitecture
 
 public struct PlotClient {
     var newPlot: Plot
-    var fetch: @Sendable () async throws -> [Plot]
-    var save: @Sendable (Plot) async throws -> Plot
+    var fetch: () -> [Plot]
+    var save: () -> ()
 }
 
 extension PlotClient: TestDependencyKey {
     public static let previewValue = Self(
         newPlot: PlotCloudManager.shared.newPlot,
         fetch: { [] },
-        save: { _ in .init() }
+        save: { }
     )
     
     public static let testValue = Self(
@@ -40,15 +40,8 @@ extension DependencyValues {
 extension PlotClient: DependencyKey {
     static public let liveValue = PlotClient(
         newPlot: PlotCloudManager.shared.newPlot,
-        fetch: {
-            PlotCloudManager.shared.fetchTasks(completion: {_,_ in })
-            PlotCloudManager.shared.fetch()
-            return []
-        },
-        save: { plot in
-            PlotCloudManager.shared.save(plot)
-            return plot
-        }
+        fetch: { PlotCloudManager.shared.fetch() },
+        save: { PlotCloudManager.shared.save() }
     )
 }
 

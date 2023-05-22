@@ -61,11 +61,7 @@ struct EditPlotStore: ReducerProtocol {
                 return .none
                 
             case .saveButtonTapped:
-                return .task { [plot = state.plot] in
-                    await .saveResponse(
-                        TaskResult { try await self.plotClient.save(plot) }
-                    )
-                }
+                plotClient.save()
                 return .none
                 
             case .plotListCell:

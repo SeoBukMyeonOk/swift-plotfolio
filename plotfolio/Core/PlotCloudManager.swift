@@ -71,25 +71,23 @@ extension PlotCloudManager {
         let request: NSFetchRequest<NSFetchRequestResult> = .init(entityName: "Plot")
         
         do {
-            let plots = try viewContext.fetch(request) as! [Plot]
+            return try viewContext.fetch(request) as! [Plot]
         } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            print(error)
+            return []
         }
-        
-        return []
     }
     
-    func save(_ plot: Plot) {
+    func save() {
         let viewContext = self.persistentContainer.viewContext
-        
-        let newPlot = Plot(context: viewContext)
-        newPlot.title = plot.title
-        newPlot.content = plot.content
-        newPlot.date = plot.date
-        newPlot.type = plot.type
-        newPlot.point = plot.point
-        
+//
+//        let newPlot = Plot(context: viewContext)
+//        newPlot.title = plot.title
+//        newPlot.content = plot.content
+//        newPlot.date = plot.date
+//        newPlot.type = plot.type
+//        newPlot.point = plot.point
+//
         do {
             try viewContext.save()
         } catch {
