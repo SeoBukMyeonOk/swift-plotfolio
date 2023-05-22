@@ -77,7 +77,6 @@ struct HomeStore: ReducerProtocol {
                 default:
                     return .none
                 }
-                return .none
             }
         }
         .forEach(\.plotListCells, action: /Action.plotListCell(id:action:)) {

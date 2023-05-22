@@ -13,6 +13,7 @@ struct EditPlotStore: ReducerProtocol {
     struct State: Equatable {
         var plot: Plot
         
+        var date: Date = .init()
         var type: Int16
         
         init(plot: Plot) {
