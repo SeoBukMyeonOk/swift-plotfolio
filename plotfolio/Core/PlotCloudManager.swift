@@ -18,8 +18,8 @@ enum FetchError {
     case none
 }
 
-class PlotCloudHelper {
-    static let shared = PlotCloudHelper()
+class PlotCloudManager {
+    static let shared = PlotCloudManager()
     
     lazy var persistentContainer: NSPersistentCloudKitContainer = {
         let container = NSPersistentCloudKitContainer(name: "plotfolio")
@@ -54,14 +54,39 @@ class PlotCloudHelper {
     }()
 }
 
-extension PlotCloudHelper {
+extension PlotCloudManager {
+    var newPlot: Plot {
+        let viewContext = self.persistentContainer.viewContext
+        let newPlot = Plot(context: viewContext)
+        
+        newPlot.title = ""
+        newPlot.content = ""
+        newPlot.type = 0
+        
+        return newPlot
+    }
+    
+    func fetch() -> [Plot] {
+        let viewContext = self.persistentContainer.viewContext
+        let request: NSFetchRequest<NSFetchRequestResult> = .init(entityName: "Plot")
+        
+        do {
+            let plots = try viewContext.fetch(request) as! [Plot]
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+        
+        return []
+    }
+    
     func save(_ plot: Plot) {
         let viewContext = self.persistentContainer.viewContext
         
         let newPlot = Plot(context: viewContext)
-        newPlot.date = plot.date
         newPlot.title = plot.title
         newPlot.content = plot.content
+        newPlot.date = plot.date
         newPlot.type = plot.type
         newPlot.point = plot.point
         

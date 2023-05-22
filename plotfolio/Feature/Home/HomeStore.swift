@@ -52,7 +52,7 @@ struct HomeStore: ReducerProtocol {
                 }
                 
             case .addButtonTapped:
-                state.editPlot = .init()
+                state.editPlot = .init(.init(plot: plotClient.newPlot))
                 state.path.append(.editPlot)
                 return .none
                 

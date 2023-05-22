@@ -17,11 +17,7 @@ struct EditPlotStore: ReducerProtocol {
             .init(id: .init()),
             .init(id: .init())
         ]
-        var plot: Plot = .init()
-//        var title: String = ""
-//        var content: String = ""
-//        var date: Date = .init()
-//        var type: PlotType = .media
+        var plot: Plot
     }
     
     enum Action: BindableAction, Equatable {

@@ -11,7 +11,6 @@ import ComposableArchitecture
 
 struct EditPlotView: View {
     public let store: StoreOf<EditPlotStore>
-    @State private var text: String = ""
     
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
@@ -79,7 +78,7 @@ struct EditPlotView: View {
             .navigationBarItems(
                 trailing: HStack(spacing: 20) {
                     Button("Save") {
-                        
+                        viewStore.send(.saveButtonTapped)
                     }
                 }
             )
@@ -90,7 +89,7 @@ struct EditPlotView: View {
 
 struct EditPlotView_Previews: PreviewProvider {
     static var previews: some View {
-        EditPlotView(store: .init(initialState: .init(), reducer: EditPlotStore()._printChanges()))
+        EditPlotView(store: .init(initialState: .init(plot: PlotCloudManager.shared.newPlot), reducer: EditPlotStore()._printChanges()))
     }
 }
 

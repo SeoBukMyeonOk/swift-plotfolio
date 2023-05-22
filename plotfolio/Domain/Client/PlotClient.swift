@@ -10,17 +10,20 @@ import Foundation
 import ComposableArchitecture
 
 public struct PlotClient {
+    var newPlot: Plot
     var fetch: @Sendable () async throws -> [Plot]
     var save: @Sendable (Plot) async throws -> Plot
 }
 
 extension PlotClient: TestDependencyKey {
     public static let previewValue = Self(
+        newPlot: PlotCloudManager.shared.newPlot,
         fetch: { [] },
         save: { _ in .init() }
     )
     
     public static let testValue = Self(
+        newPlot: unimplemented("\(Self.self).newPlot"),
         fetch: unimplemented("\(Self.self).fetch"),
         save: unimplemented("\(Self.self).save")
     )
@@ -36,12 +39,14 @@ extension DependencyValues {
 // TODO: mock 말고 실제 API 연동 해야함
 extension PlotClient: DependencyKey {
     static public let liveValue = PlotClient(
+        newPlot: PlotCloudManager.shared.newPlot,
         fetch: {
-            PlotCloudHelper.shared.fetchTasks(completion: {_,_ in })
+            PlotCloudManager.shared.fetchTasks(completion: {_,_ in })
+            PlotCloudManager.shared.fetch()
             return []
         },
         save: { plot in
-            PlotCloudHelper.shared.save(plot)
+            PlotCloudManager.shared.save(plot)
             return plot
         }
     )
