@@ -71,7 +71,9 @@ struct EditPlotStore: ReducerProtocol {
                 return .send(.saveRequest)
                 
             case .saveRequest:
-                plotClient.save()
+                if state.plot.title?.isEmpty == false && state.plot.content?.isEmpty == false {
+                    plotClient.save()
+                }
                 return .none
                 
             case .plotListCell:

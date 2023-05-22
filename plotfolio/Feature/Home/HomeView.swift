@@ -42,8 +42,16 @@ struct HomeView: View {
                 }
                 .navigationTitle("Plotfolio")
                 .navigationBarItems(
-                    trailing: HStack(spacing: 20) {
+                    trailing: HStack(spacing: 10) {
                         EditButton()
+                        
+                        Button(action:{
+                            viewStore.send(.addButtonTapped)
+                        }) {
+                            Image(systemName: "gearshape")
+                                .imageScale(.medium)
+                                .foregroundColor(.accentColor)
+                        }
                     }
                 )
                 .navigationDestination(for: HomeScene.self) { scene in
