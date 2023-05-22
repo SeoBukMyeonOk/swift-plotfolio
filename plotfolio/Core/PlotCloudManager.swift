@@ -84,54 +84,7 @@ extension PlotCloudManager {
         do {
             try viewContext.save()
         } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            print(error)
         }
     }
-    
-    func fetchTasks(completion: @escaping ([CKRecord]?, FetchError) -> Void) {
-        try? print(persistentContainer.viewContext.fetch(.init(entityName: "Plot")))
-    }
-    
-    func addTask(_ task: String, completionHandler: @escaping (CKRecord?, FetchError) -> Void) {
-        
-    }
-    
-    func deleteRecord(record: CKRecord, completionHandler: @escaping (FetchError) -> Void) {
-        
-    }
-    
-    func updateTask(_ task: CKRecord, completionHandler: @escaping (CKRecord?, FetchError) -> Void) {
-        
-    }
-    
-    
-    
-    //        func fetchTasks(completion: @escaping ([CKRecord]?, FetchError) -> Void) {
-    //    //        let publicDatabase = CKContainer(identifier: containerName).publicCloudDatabase
-    //    //        let query = CKQuery(recordType: recordType, predicate: NSPredicate(value: true))
-    //    //        query.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)]
-    //
-    //
-    //            try? print(persistentContainer.viewContext.fetch(.init(entityName: "Plot")))
-    //        }
-    //
-    //        func add() {
-    //    //        let publicDatabase = CKContainer(identifier: containerName).publicCloudDatabase
-    //            let record = CKRecord(recordType: "Plot")
-    //
-    //            record.setObject("test title" as __CKRecordObjCValue, forKey: "title")
-    //            record.setObject(Date() as __CKRecordObjCValue, forKey: "date")
-    //
-    //            persistentContainer.
-    //
-    //            publicDatabase.save(record, completionHandler: { (record, error) in
-    //              guard let _ = error else {
-    //                completionHandler(record, .none)
-    //                return
-    //              }
-    //
-    //              completionHandler(nil, .addingError)
-    //            })
-    //        }
 }

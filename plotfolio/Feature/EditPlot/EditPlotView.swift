@@ -44,11 +44,14 @@ struct EditPlotView: View {
                         ForEach(PlotType.allCases, id: \.self) { type in
                             HStack {
                                 Button(
-                                    action: {},
+                                    action: {
+                                        viewStore.send(.typeChanged(type.int16), animation: .default)
+                                    },
                                     label: {
-                                        Image(systemName: "circle")
+                                        Image(systemName: viewStore.state.type == type.int16 ? "circle.fill" : "circle")
                                             .imageScale(.small)
                                             .font(.footnote)
+                                            .foregroundColor(.black)
                                     })
                                 
                                 Text("\(type.rawValue)")

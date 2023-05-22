@@ -12,6 +12,13 @@ import ComposableArchitecture
 struct EditPlotStore: ReducerProtocol {
     struct State: Equatable {
         var plot: Plot
+        
+        var type: Int16
+        
+        init(plot: Plot) {
+            self.plot = plot
+            self.type = plot.type
+        }
     }
     
     enum Action: BindableAction, Equatable {
@@ -20,7 +27,7 @@ struct EditPlotStore: ReducerProtocol {
         case titleChanged(String)
         case contentChanged(String)
         case dateChanged(Date)
-        case typeChanged(Int)
+        case typeChanged(Int16)
         case saveButtonTapped
         
         case saveResponse(TaskResult<Plot>)
@@ -51,7 +58,8 @@ struct EditPlotStore: ReducerProtocol {
                 return .none
                 
             case let .typeChanged(type):
-                state.plot.type = Int16(type)
+                state.plot.type = type
+                state.type = type
                 return .none
                 
             case .saveButtonTapped:

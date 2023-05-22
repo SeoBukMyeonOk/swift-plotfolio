@@ -17,7 +17,7 @@ struct PlotListCellView: View {
             VStack {
                 HStack {
                     Text(viewStore.plot.title ?? "")
-                        .font(.title3)
+                        .font(.body)
                         .fontWeight(.semibold)
                     
                     Spacer()

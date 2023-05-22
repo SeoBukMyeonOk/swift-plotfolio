@@ -17,4 +17,8 @@ enum PlotType: String, CaseIterable {
     case place
     case media
     case etc = "etc."
+    
+    var int16: Int16 {
+        return Int16(PlotType.allCases.firstIndex(of: self) ?? 0)
+    }
 }

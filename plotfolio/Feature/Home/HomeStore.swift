@@ -68,7 +68,15 @@ struct HomeStore: ReducerProtocol {
                     return .none
                 }
                 
-            case .editPlot:
+            case let .editPlot(action):
+                switch action {
+                case .saveButtonTapped:
+                    state.path.removeLast()
+                    return .none
+                    
+                default:
+                    return .none
+                }
                 return .none
             }
         }
