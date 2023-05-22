@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import Foundation
 
 enum HomeScene: Hashable {
     case home
@@ -57,8 +58,15 @@ struct HomeStore: ReducerProtocol {
                 })
                 return .none
                 
-            case .plotListCell:
-                return .none
+            case let .plotListCell(id, action):
+                switch action {
+                case .tapped:
+                    if let plot = state.plotListCells.first(where: { $0.id == id })?.plot {
+                        state.editPlot = .init(plot: plot)
+                        state.path.append(.editPlot)
+                    }
+                    return .none
+                }
                 
             case .editPlot:
                 return .none

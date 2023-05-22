@@ -17,8 +17,8 @@ struct HomeView: View {
             NavigationStack(path: viewStore.binding(\.$path)) {
                 VStack(spacing: .zero) {
                     List {
-                        ForEachStore(self.store.scope(state: \.plotListCells, action: HomeStore.Action.plotListCell(id:action:))) {
-                            PlotListCellView(store: $0)
+                        ForEachStore(self.store.scope(state: \.plotListCells, action: HomeStore.Action.plotListCell(id:action:))) { store in
+                            PlotListCellView(store: store)
                         }
                     }
                     

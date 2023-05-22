@@ -16,10 +16,13 @@ struct PlotListCellStore: ReducerProtocol {
     }
     
     enum Action: Equatable {
+        case tapped
     }
     
     func reduce(into state: inout State, action: Action) -> EffectTask<Action> {
         switch action {
+        case .tapped:
+            return .none
         }
     }
 }

@@ -25,11 +25,15 @@ struct PlotListCellView: View {
                 
                 HStack {
                     Text(viewStore.plot.content ?? "")
-                        .font(.title)
+                        .font(.subheadline)
                         .foregroundColor(.gray)
                     
                     Spacer()
                 }
+            }
+            .contentShape(Rectangle())
+            .onTapGesture {
+                viewStore.send(.tapped)
             }
         }
     }

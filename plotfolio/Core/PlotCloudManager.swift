@@ -80,14 +80,7 @@ extension PlotCloudManager {
     
     func save() {
         let viewContext = self.persistentContainer.viewContext
-//
-//        let newPlot = Plot(context: viewContext)
-//        newPlot.title = plot.title
-//        newPlot.content = plot.content
-//        newPlot.date = plot.date
-//        newPlot.type = plot.type
-//        newPlot.point = plot.point
-//
+
         do {
             try viewContext.save()
         } catch {
