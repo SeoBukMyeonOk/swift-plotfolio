@@ -13,13 +13,14 @@ struct EditPlotStore: ReducerProtocol {
     struct State: Equatable {
         var plot: Plot
         
-        var point: Double = 0.0
-        var date: Date = .init()
+        var point: Double
+        var date: Date
         var type: Int16
         
         init(plot: Plot) {
             self.plot = plot
             self.point = plot.point
+            self.date = plot.date ?? .init()
             self.type = plot.type
         }
     }
@@ -58,6 +59,7 @@ struct EditPlotStore: ReducerProtocol {
                 
             case let .dateChanged(date):
                 state.plot.date = date
+                state.date = date
                 return .send(.saveRequest)
                 
             case let .typeChanged(type):
@@ -71,7 +73,7 @@ struct EditPlotStore: ReducerProtocol {
                 return .send(.saveRequest)
                 
             case .saveRequest:
-                if state.plot.title?.isEmpty == false && state.plot.content?.isEmpty == false {
+                if state.plot.title?.isEmpty == false || state.plot.content?.isEmpty == false {
                     plotClient.save()
                 }
                 return .none

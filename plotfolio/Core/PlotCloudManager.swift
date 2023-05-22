@@ -70,7 +70,6 @@ extension PlotCloudManager {
     
     func fetch() -> [Plot] {
         let viewContext = self.persistentContainer.viewContext
-        viewContext.reset()
         
         let request: NSFetchRequest<NSFetchRequestResult> = .init(entityName: "Plot")
         
