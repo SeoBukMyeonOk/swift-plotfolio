@@ -3,7 +3,7 @@
 ## Logo
 <img width="22%" src="https://github.com/SeoBukMyeonOk/swift-plotfolio/assets/77970826/15b07cbc-80ca-4545-9c77-3c77ac5906f8">
 
-플롯들을 아카이빙하는 단순 메모장 입니다.
+플롯들을 아카이빙하는 단순 메모장 입니다. (참고: 디자인 == 나)
 
 ## UI
 <p align="left">
