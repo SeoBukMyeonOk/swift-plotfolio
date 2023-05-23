@@ -14,7 +14,6 @@ struct EditPlotView: View {
     
     @Environment(\.colorScheme) var colorScheme
     @State private var calendarId: UUID = UUID()
-    var rating: CGFloat = 2.3
     
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in

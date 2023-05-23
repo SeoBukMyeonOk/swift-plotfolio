@@ -11,7 +11,7 @@ import ComposableArchitecture
 import CoreData
 
 public struct PlotClient {
-    var newPlot: Plot
+    var newPlot: () -> Plot
     var fetch: () -> [Plot]
     var save: () -> ()
     var delete: (NSManagedObjectID) -> ()
@@ -19,7 +19,7 @@ public struct PlotClient {
 
 extension PlotClient: TestDependencyKey {
     public static let previewValue = Self(
-        newPlot: PlotCloudManager.shared.newPlot,
+        newPlot: { PlotCloudManager.shared.newPlot() },
         fetch: { [] },
         save: { },
         delete: { _ in }
@@ -43,7 +43,7 @@ extension DependencyValues {
 // TODO: mock 말고 실제 API 연동 해야함
 extension PlotClient: DependencyKey {
     static public let liveValue = PlotClient(
-        newPlot: PlotCloudManager.shared.newPlot,
+        newPlot: { PlotCloudManager.shared.newPlot() },
         fetch: { PlotCloudManager.shared.fetch() },
         save: { PlotCloudManager.shared.save() },
         delete: { id in PlotCloudManager.shared.delete(id: id) }

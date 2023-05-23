@@ -24,6 +24,9 @@ struct HomeView: View {
                         }
                         .onDelete { viewStore.send(.delete($0)) }
                     }
+                    .refreshable {
+                        viewStore.send(.refresh)
+                    }
                     
                     Spacer()
                     

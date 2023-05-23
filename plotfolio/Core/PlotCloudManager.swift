@@ -55,7 +55,7 @@ class PlotCloudManager {
 }
 
 extension PlotCloudManager {
-    var newPlot: Plot {
+    func newPlot() -> Plot {
         let viewContext = self.persistentContainer.viewContext
         viewContext.reset()
         
@@ -64,6 +64,7 @@ extension PlotCloudManager {
         newPlot.title = ""
         newPlot.content = ""
         newPlot.type = 0
+        newPlot.date = .init()
         
         return newPlot
     }
