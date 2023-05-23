@@ -17,8 +17,10 @@ struct HomeStore: ReducerProtocol {
     struct State: Equatable {
         @BindingState var path: [HomeScene] = []
         
-        var plotListCells: IdentifiedArrayOf<PlotListCellStore.State> = []
+        var searchQuery: String = ""
         
+        var plotListCells: IdentifiedArrayOf<PlotListCellStore.State> = []
+        var filteredPlotListCells: IdentifiedArrayOf<PlotListCellStore.State> = []
         var editPlot: EditPlotStore.State?
     }
     
@@ -28,6 +30,7 @@ struct HomeStore: ReducerProtocol {
         case refresh
         case addButtonTapped
         case fetchResponse([Plot])
+        case search(String)
         case delete(IndexSet)
         
         case plotListCell(id: PlotListCellStore.State.ID, action: PlotListCellStore.Action)
@@ -52,11 +55,26 @@ struct HomeStore: ReducerProtocol {
                 state.path.append(.editPlot)
                 return .none
                 
+            case let .search(searchQuery):
+                state.searchQuery = searchQuery
+                guard searchQuery.isEmpty == false else {
+                    state.filteredPlotListCells = state.plotListCells
+                    return .none
+                }
+                
+                state.filteredPlotListCells = state.plotListCells.filter({
+                    $0.plot.title?.lowercased().contains(searchQuery.lowercased()) == true ||
+                    $0.plot.content?.lowercased().contains(searchQuery.lowercased()) == true
+                })
+                
+                return .none
+                
             case let .fetchResponse(plots):
                 state.plotListCells = []
                 plots.forEach({ plot in
                     state.plotListCells.append(.init(id: .init(), plot: plot))
                 })
+                state.filteredPlotListCells = state.plotListCells
                 return .none
                 
             case let .delete(indexSet):

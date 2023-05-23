@@ -12,12 +12,14 @@ import ComposableArchitecture
 struct HomeView: View {
     public let store: StoreOf<HomeStore>
     
+    @Environment(\.isSearching) private var isSearching
+    
     public var body: some View {
         WithViewStore(self.store, observe: { $0 }) { viewStore in
             NavigationStack(path: viewStore.binding(\.$path)) {
                 VStack(spacing: .zero) {
                     List {
-                        ForEachStore(self.store.scope(state: \.plotListCells, action: HomeStore.Action.plotListCell(id:action:))) { store in
+                        ForEachStore(self.store.scope(state: \.filteredPlotListCells, action: HomeStore.Action.plotListCell(id:action:))) { store in
                             PlotListCellView(store: store)
                         }
                         .onDelete { viewStore.send(.delete($0)) }
@@ -65,6 +67,14 @@ struct HomeView: View {
                         EmptyView()
                     }
                 }
+                .searchable(
+                    text: viewStore.binding(
+                        get: { $0.searchQuery },
+                        send: { .search($0) }
+                    ),
+                    placement: .toolbar,
+                    prompt: "Search"
+                )
             }
         }
     }
