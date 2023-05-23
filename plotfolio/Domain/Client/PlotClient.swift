@@ -40,7 +40,6 @@ extension DependencyValues {
     }
 }
 
-// TODO: mock 말고 실제 API 연동 해야함
 extension PlotClient: DependencyKey {
     static public let liveValue = PlotClient(
         newPlot: { PlotCloudManager.shared.newPlot() },
