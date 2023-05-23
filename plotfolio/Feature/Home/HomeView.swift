@@ -35,7 +35,6 @@ struct HomeView: View {
                         }) {
                             Image(systemName: "square.and.pencil")
                                 .imageScale(.large)
-                                .foregroundColor(.accentColor)
                         }
                         .padding(.horizontal)
                     }
@@ -49,11 +48,10 @@ struct HomeView: View {
                         EditButton()
                         
                         Button(action:{
-                            viewStore.send(.addButtonTapped)
+                            viewStore.send(.settingButtonTapped)
                         }) {
                             Image(systemName: "gearshape")
                                 .imageScale(.medium)
-                                .foregroundColor(.accentColor)
                         }
                     }
                 )
@@ -63,6 +61,12 @@ struct HomeView: View {
                         IfLetStore(self.store.scope(state: \.editPlot, action: { .editPlot($0) })) {
                             EditPlotView(store: $0)
                         }
+                        
+                    case .setting:
+                        IfLetStore(self.store.scope(state: \.setting, action: { .setting($0) })) {
+                            SettingView(store: $0)
+                        }
+                        
                     default:
                         EmptyView()
                     }

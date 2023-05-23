@@ -11,6 +11,7 @@ import Foundation
 enum HomeScene: Hashable {
     case home
     case editPlot
+    case setting
 }
 
 struct HomeStore: ReducerProtocol {
@@ -22,6 +23,7 @@ struct HomeStore: ReducerProtocol {
         var plotListCells: IdentifiedArrayOf<PlotListCellStore.State> = []
         var filteredPlotListCells: IdentifiedArrayOf<PlotListCellStore.State> = []
         var editPlot: EditPlotStore.State?
+        var setting: SettingStore.State?
     }
     
     enum Action: BindableAction, Equatable {
@@ -29,12 +31,14 @@ struct HomeStore: ReducerProtocol {
         
         case refresh
         case addButtonTapped
+        case settingButtonTapped
         case fetchResponse([Plot])
         case search(String)
         case delete(IndexSet)
         
         case plotListCell(id: PlotListCellStore.State.ID, action: PlotListCellStore.Action)
         case editPlot(EditPlotStore.Action)
+        case setting(SettingStore.Action)
     }
     
     @Dependency(\.plotClient) var plotClient
@@ -53,6 +57,11 @@ struct HomeStore: ReducerProtocol {
             case .addButtonTapped:
                 state.editPlot = .init(.init(plot: plotClient.newPlot))
                 state.path.append(.editPlot)
+                return .none
+                
+            case .settingButtonTapped:
+                state.setting = .init()
+                state.path.append(.setting)
                 return .none
                 
             case let .search(searchQuery):
@@ -94,7 +103,7 @@ struct HomeStore: ReducerProtocol {
                     return .none
                 }
                 
-            case .editPlot:
+            case .editPlot, .setting:
                 return .none
             }
         }

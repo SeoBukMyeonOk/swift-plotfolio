@@ -84,7 +84,7 @@ struct EditPlotView: View {
                             }, label: {
                                 Image(systemName: "arrow.counterclockwise")
                                     .imageScale(.small)
-                                    .foregroundColor(colorScheme == .light ? .black : .white)
+                                    .foregroundColor(Color(.label))
                             })
                         }
                     }
@@ -102,7 +102,7 @@ struct EditPlotView: View {
                                         Image(systemName: viewStore.state.type == type.int16 ? "circle.fill" : "circle")
                                             .imageScale(.small)
                                             .font(.footnote)
-                                            .foregroundColor(colorScheme == .light ? .black : .white)
+                                            .foregroundColor(Color(.label))
                                     })
                                 
                                 Text("\(type.rawValue)")
