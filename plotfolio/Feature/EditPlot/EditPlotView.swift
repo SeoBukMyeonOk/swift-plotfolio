@@ -61,19 +61,32 @@ struct EditPlotView: View {
                                     }
                             )
                             .frame(width: 100)
-                        
-                        stars.overlay(
-                            GeometryReader { g in
-                                let width = viewStore.state.point / CGFloat(5) * g.size.width
-                                ZStack(alignment: .leading) {
-                                    Rectangle()
-                                        .frame(width: width)
-                                        .foregroundColor(.yellow)
+                        HStack {
+                            stars.overlay(
+                                GeometryReader { g in
+                                    let width = viewStore.state.point / CGFloat(5) * g.size.width
+                                    ZStack(alignment: .leading) {
+                                        Rectangle()
+                                            .frame(width: width)
+                                            .foregroundColor(.yellow)
+                                    }
                                 }
-                            }
-                                .mask(stars)
-                        )
-                        .foregroundColor(.gray)
+                                    .mask(stars)
+                            )
+                            .foregroundColor(.gray)
+                            
+                            Text("\(viewStore.state.point, specifier: "%.1f")")
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                            
+                            Button(action: {
+                                viewStore.send(.pointChanged(0), animation: .default)
+                            }, label: {
+                                Image(systemName: "arrow.counterclockwise")
+                                    .imageScale(.small)
+                                    .foregroundColor(colorScheme == .light ? .black : .white)
+                            })
+                        }
                     }
                     
                     Spacer()
