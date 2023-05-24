@@ -26,19 +26,7 @@ struct EditPlotView: View {
                         ))
                         .font(.title3)
                         .fontWeight(.semibold)
-                        
-                        DatePicker(
-                            "",
-                            selection: viewStore.binding(get: \.date, send: EditPlotStore.Action.dateChanged),
-                            displayedComponents: [.date]
-                        )
-                        .id(calendarId)
-                        .onChange(of: viewStore.date, perform: { _ in
-                            calendarId = UUID()
-                        })
-                        .frame(width: 40)
-                        .padding(.horizontal)
-                        .padding(.bottom, 50)
+                        .padding(.bottom, 80)
                         
                         let stars = HStack(spacing: 0) {
                             ForEach(0..<5, id: \.self) { _ in
@@ -59,8 +47,8 @@ struct EditPlotView: View {
                                         viewStore.send(.pointChanged(point))
                                     }
                             )
-                            .frame(width: 100)
-                        HStack {
+                            .frame(width: 80)
+                        HStack(spacing: 5) {
                             stars.overlay(
                                 GeometryReader { g in
                                     let width = viewStore.state.point / CGFloat(5) * g.size.width
@@ -84,6 +72,16 @@ struct EditPlotView: View {
                                 Image(systemName: "arrow.counterclockwise")
                                     .imageScale(.small)
                                     .foregroundColor(Color(.label))
+                            })
+                            
+                            DatePicker(
+                                "",
+                                selection: viewStore.binding(get: \.date, send: EditPlotStore.Action.dateChanged),
+                                displayedComponents: [.date]
+                            )
+                            .id(calendarId)
+                            .onChange(of: viewStore.date, perform: { _ in
+                                calendarId = UUID()
                             })
                         }
                     }
