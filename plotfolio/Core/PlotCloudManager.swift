@@ -10,14 +10,6 @@ import Foundation
 import CloudKit
 import CoreData
 
-enum FetchError {
-    case addingError
-    case fetchingError
-    case deletingError
-    case noRecords
-    case none
-}
-
 class PlotCloudManager {
     static let shared = PlotCloudManager()
     

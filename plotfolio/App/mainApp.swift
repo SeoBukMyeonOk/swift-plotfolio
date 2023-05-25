@@ -9,8 +9,6 @@ import SwiftUI
 
 @main
 struct mainApp: App {
-//    let persistenceController = PersistenceController.shared
-
     var body: some Scene {
         WindowGroup {
             RootView(store: .init(initialState: .init(), reducer: RootStore()._printChanges()))
